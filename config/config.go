@@ -18,7 +18,7 @@ var SecretConfig EnvConfig
 
 func init() {
 	viper.AddConfigPath(".")
-	viper.SetConfigName(".env.local")
+	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
