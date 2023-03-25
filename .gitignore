@@ -1,0 +1,7 @@
+.idea
+go.sum
+.vscode
+go.work
+go.work.sum
+.env.local
+.env.prod
