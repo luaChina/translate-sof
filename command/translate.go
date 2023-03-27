@@ -37,6 +37,15 @@ func TranslateSofAndSave(ctx context.Context) error {
 }
 
 func processItem(ctx context.Context, post stackoverflow.Posts) error {
+	if len(post.Title) > 4096 || len(post.Body) > 4096 {
+		if err := (lua_china.SofPostTranslate{
+			Id:     post.Id,
+			PostId: 0,
+		}).Create(ctx); err != nil {
+			return err
+		}
+		return nil
+	}
 	converter := md.NewConverter("", true, nil)
 	fmt.Println(post.Id)
 	query := fmt.Sprintf("将下面内容翻译成中文只显示翻译内容 %s", post.Title)
