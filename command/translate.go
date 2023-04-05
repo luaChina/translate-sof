@@ -2,13 +2,14 @@ package command
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	md "github.com/JohannesKaufmann/html-to-markdown"
+	"github.com/luaChina/translate-sof/entity"
 	"github.com/luaChina/translate-sof/model/lua_china"
 	"github.com/luaChina/translate-sof/model/stackoverflow"
 	"github.com/luaChina/translate-sof/service"
 	"gorm.io/gorm"
-	"strings"
 )
 
 // TranslateSofAndSave .
@@ -48,25 +49,28 @@ func processItem(ctx context.Context, post stackoverflow.Posts) error {
 	}
 	converter := md.NewConverter("", true, nil)
 	fmt.Println(post.Id)
-	query := fmt.Sprintf("将下面内容翻译成中文只显示翻译内容 %s", post.Title)
-	result, err := service.SendChatMessage(ctx, query)
-	if err != nil {
-		return err
-	}
-	title := strings.Trim(result, "\n")
-	fmt.Println(title)
 	markdownBody, err := converter.ConvertString(post.Body)
 	if err != nil {
 		return err
 	}
-	query = fmt.Sprintf("将下面内容翻译成中文只显示翻译内容，保留原本的 markdown 格式 %s", markdownBody)
-	result, err = service.SendChatMessage(ctx, query)
+	needTransMessage, err := json.Marshal(entity.TitleAndContent{
+		Title:   post.Title,
+		Content: markdownBody,
+	})
 	if err != nil {
 		return err
 	}
-	body := strings.Trim(result, "\n")
-	fmt.Println(body)
-	if err := saveToLuaChina(ctx, post, title, body); err != nil {
+	query := fmt.Sprintf("将下面的 json 中 title 和 content 字段翻译成中文并且保留原本的 markdown 格式，然后json返回,\n %s", string(needTransMessage))
+	result, err := service.SendChatMessage(ctx, query)
+	if err != nil {
+		return err
+	}
+	var response entity.TitleAndContent
+	if err := json.Unmarshal([]byte(result), &response); err != nil {
+		return err
+	}
+	fmt.Println(response)
+	if err := saveToLuaChina(ctx, post, response.Title, response.Content); err != nil {
 		return err
 	}
 	return nil
