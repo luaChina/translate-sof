@@ -3,7 +3,9 @@ package lua_china
 import (
 	"context"
 	"database/sql"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"strconv"
 	"time"
 )
 
@@ -43,4 +45,25 @@ func (m Users) GetByUserId(ctx context.Context, userId int) (Users, error) {
 	var user Users
 	err := GetDB(ctx).Where("id = ?", userId).Take(&user).Error
 	return user, err
+}
+
+// FindOrCreate .
+func (m Users) FindOrCreate(ctx context.Context, userId int) (*Users, error) {
+	user, err := m.GetByUserId(ctx, userId)
+	if err == gorm.ErrRecordNotFound {
+		user := Users{
+			Id:       userId,
+			Name:     "stackoverflow用户" + strconv.Itoa(userId),
+			Phone:    strconv.Itoa(userId),
+			Source:   1,
+			Password: "",
+		}
+		if err := user.Create(ctx); err != nil {
+			return nil, err
+		}
+	} else if err == nil {
+		return &user, nil
+	} else {
+		return nil, err
+	}
 }

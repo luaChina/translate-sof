@@ -10,6 +10,7 @@ import (
 	"github.com/luaChina/translate-sof/model/stackoverflow"
 	"github.com/luaChina/translate-sof/service"
 	"gorm.io/gorm"
+	"time"
 )
 
 // TranslateSofAndSave .
@@ -48,7 +49,7 @@ func processItem(ctx context.Context, post stackoverflow.Posts) error {
 		return nil
 	}
 	converter := md.NewConverter("", true, nil)
-	fmt.Println(post.Id)
+	fmt.Println(time.Now(), post.Id)
 	markdownBody, err := converter.ConvertString(post.Body)
 	if err != nil {
 		return err
@@ -61,6 +62,7 @@ func processItem(ctx context.Context, post stackoverflow.Posts) error {
 		return err
 	}
 	query := fmt.Sprintf("将下面的 json 中 title 和 content 字段翻译成中文并且保留原本的 markdown 格式，然后json返回,\n %s", string(needTransMessage))
+	fmt.Println(time.Now(), query)
 	result, err := service.SendChatMessage(ctx, query)
 	if err != nil {
 		return err
@@ -69,11 +71,8 @@ func processItem(ctx context.Context, post stackoverflow.Posts) error {
 	if err := json.Unmarshal([]byte(result), &response); err != nil {
 		return err
 	}
-	fmt.Println(response)
-	if err := saveToLuaChina(ctx, post, response.Title, response.Content); err != nil {
-		return err
-	}
-	return nil
+	fmt.Println(time.Now(), response)
+	return saveToLuaChina(ctx, post, response.Title, response.Content)
 }
 
 // save to luachina
