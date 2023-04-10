@@ -92,31 +92,24 @@ func saveToLuaChina(ctx context.Context, sofPost stackoverflow.Posts, title, bod
 				return err
 			}
 		} else if err == nil {
-			article := lua_china.Posts{
-				PostTagId: 2,
-				UserId:    userId,
-				Title:     title,
-				Content:   body,
-				CreatedAt: sofPost.CreationDate,
-				UpdatedAt: sofPost.LastEditDate,
-				Source:    1,
-			}
-			if err := article.Create(ctx); err != nil {
-				return err
-			}
-			if err := (lua_china.SofPostTranslate{
-				Id:     sofPost.Id,
-				PostId: article.Id,
-			}).Create(ctx); err != nil {
-				return err
-			}
 		} else {
 			return err
 		}
-		if err := (stackoverflow.PostTranslate{
-			Id:    sofPost.Id,
-			Title: "",
-			Body:  "",
+		article := lua_china.Posts{
+			PostTagId: 2,
+			UserId:    userId,
+			Title:     title,
+			Content:   body,
+			CreatedAt: sofPost.CreationDate,
+			UpdatedAt: sofPost.LastEditDate,
+			Source:    1,
+		}
+		if err := article.Create(ctx); err != nil {
+			return err
+		}
+		if err := (lua_china.SofPostTranslate{
+			Id:     sofPost.Id,
+			PostId: article.Id,
 		}).Create(ctx); err != nil {
 			return err
 		}
