@@ -54,6 +54,10 @@ func processAnswer(ctx context.Context, post stackoverflow.Posts) error {
 
 // saveAnswerToComment .
 func saveAnswerToComment(ctx context.Context, post stackoverflow.Posts, result string) error {
-	user, err := lua_china.Users{}.FindOrCreate(ctx)
+	user, err := lua_china.Users{}.FindOrCreate(ctx, post.OwnerUserId)
+	if err != nil {
+		return err
+	}
+	fmt.Println(user)
 	return nil
 }

@@ -61,6 +61,7 @@ func (m Users) FindOrCreate(ctx context.Context, userId int) (*Users, error) {
 		if err := user.Create(ctx); err != nil {
 			return nil, err
 		}
+		return &user, nil
 	} else if err == nil {
 		return &user, nil
 	} else {
