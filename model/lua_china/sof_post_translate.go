@@ -34,8 +34,8 @@ func (m SofPostTranslate) UpdatePostId(ctx context.Context, id, postId int) erro
 }
 
 // GetBySofPostId .
-func (m SofPostTranslate) GetBySofPostId(ctx context.Context, postId int) (SofPostTranslate, error) {
+func (m SofPostTranslate) GetBySofPostId(ctx context.Context, id int) (SofPostTranslate, error) {
 	var t SofPostTranslate
-	err := GetDB(ctx).Where("id", postId).Take(&t).Error
+	err := GetDB(ctx).Where("id", id).Take(&t).Error
 	return t, err
 }

@@ -32,7 +32,7 @@ func (Users) TableName() string {
 }
 
 // Create .
-func (m Users) Create(ctx context.Context) error {
+func (m *Users) Create(ctx context.Context) error {
 	return GetDB(ctx).Clauses(clause.OnConflict{DoNothing: true}).Create(&m).Error
 }
 

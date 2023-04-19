@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	if err := command.TranslateSofAndSave(context.Background()); err != nil {
+	if err := command.TranslateAnswer(context.Background()); err != nil {
 		panic(err)
 	}
 }

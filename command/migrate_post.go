@@ -78,26 +78,6 @@ func MigrateUsers(ctx context.Context) error {
 	return nil
 }
 
-func FixRelation(ctx context.Context) error {
-	translates, err := stackoverflow.PostTranslate{}.GetAll(ctx)
-	if err != nil {
-		return err
-	}
-	for _, translate := range translates {
-		post, err := lua_china.Posts{}.GetByTitle(ctx, translate.Title)
-		if err == gorm.ErrRecordNotFound {
-			continue
-		}
-		if err != nil {
-			return err
-		}
-		if err := (lua_china.SofPostTranslate{}).UpdatePostId(ctx, translate.Id, post.Id); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func TransformSofUserId(translate stackoverflow.PostTranslate) int {
 	userId := translate.StackoverflowPost.OwnerUserId
 	if userId == 0 {
