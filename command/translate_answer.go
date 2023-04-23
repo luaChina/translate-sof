@@ -63,7 +63,7 @@ func processAnswer(ctx context.Context, post stackoverflow.Answer) error {
 	}
 	fmt.Println(time.Now(), result)
 	if time.Now().Sub(begin).Seconds() < 20 {
-		time.Sleep(time.Duration(time.Now().Sub(begin).Seconds()) * time.Second)
+		time.Sleep(time.Duration(20-time.Now().Sub(begin).Seconds()) * time.Second)
 	}
 	return saveAnswerToComment(ctx, post, result)
 }
