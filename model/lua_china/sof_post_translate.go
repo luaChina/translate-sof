@@ -21,6 +21,13 @@ func (m SofPostTranslate) Create(ctx context.Context) error {
 	return GetDB(ctx).Clauses(clause.OnConflict{DoNothing: true}).Create(&m).Error
 }
 
+// GetAll .
+func (m SofPostTranslate) GetAll(ctx context.Context) ([]SofPostTranslate, error) {
+	var list []SofPostTranslate
+	err := GetDB(ctx).Find(&list).Error
+	return list, err
+}
+
 // GetAllSofPostId .
 func (m SofPostTranslate) GetAllSofPostId(ctx context.Context) ([]int, error) {
 	var list []int

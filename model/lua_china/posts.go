@@ -38,3 +38,18 @@ func (m Posts) GetByTitle(ctx context.Context, title string) (Posts, error) {
 	err := GetDB(ctx).Where("title", title).Take(&t).Error
 	return t, err
 }
+
+// GetByPostId .
+func (m Posts) GetByPostId(ctx context.Context, postId int) (Posts, error) {
+	var post Posts
+	err := GetDB(ctx).Where("id = ?", postId).Take(&post).Error
+	return post, err
+}
+
+// Updates .
+func (m Posts) UpdateDate(ctx context.Context, postId int, createdAt, updatedAt time.Time) error {
+	return GetDB(ctx).Model(&m).Where("id", postId).UpdateColumns(map[string]any{
+		"created_at": createdAt,
+		"updated_at": updatedAt,
+	}).Error
+}

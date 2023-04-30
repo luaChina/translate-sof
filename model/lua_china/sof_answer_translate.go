@@ -34,3 +34,10 @@ func (m SofAnswerTranslate) GetBySofPostId(ctx context.Context, postId int) (Sof
 	err := GetDB(ctx).Where("id", postId).Take(&t).Error
 	return t, err
 }
+
+// GetAll .
+func (m SofAnswerTranslate) GetAll(ctx context.Context) ([]SofAnswerTranslate, error) {
+	var list []SofAnswerTranslate
+	err := GetDB(ctx).Find(&list).Error
+	return list, err
+}

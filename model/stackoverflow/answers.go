@@ -42,3 +42,10 @@ func (m Answer) GetPageByCondition(ctx context.Context, sofPostIds []int, page, 
 		return list, err
 	}
 }
+
+// GetById .
+func (m Answer) GetById(ctx context.Context, id int) (Answer, error) {
+	var t Answer
+	err := GetDB(ctx).Where("Id = ?", id).Take(&t).Error
+	return t, err
+}

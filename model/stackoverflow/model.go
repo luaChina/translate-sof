@@ -17,7 +17,7 @@ func GetDB(ctx context.Context) *gorm.DB {
 		config.SecretConfig.User, config.SecretConfig.Password, config.SecretConfig.Host, config.SecretConfig.Port)
 	if instance == nil {
 		db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-			Logger: logger.Default.LogMode(logger.Info),
+			Logger: logger.Default.LogMode(logger.Error),
 		})
 		if err != nil {
 			panic(err)

@@ -26,3 +26,18 @@ func (Comment) TableName() string {
 func (m *Comment) Create(ctx context.Context) error {
 	return GetDB(ctx).Create(&m).Error
 }
+
+// GetAll .
+func (m Comment) GetAll(ctx context.Context) ([]Comment, error) {
+	var comments []Comment
+	err := GetDB(ctx).Find(&comments).Error
+	return comments, err
+}
+
+// UpdateDate .
+func (m Comment) UpdateDate(ctx context.Context, commentId int, createdAt, updatedAt time.Time) error {
+	return GetDB(ctx).Model(&m).Where("id", commentId).UpdateColumns(map[string]any{
+		"created_at": createdAt,
+		"updated_at": updatedAt,
+	}).Error
+}

@@ -48,3 +48,10 @@ func (m Posts) GetAnswersPageByCondition(ctx context.Context, page, pageSize int
 	err := GetDB(ctx).Joins("left join post_translate on Posts.Id = post_translate.id").Where("Posts.PostTypeId", 2).Where("post_translate.Id is NULL").Limit(pageSize).Offset((page - 1) * pageSize).Find(&list).Error
 	return list, err
 }
+
+// GetById .
+func (m Posts) GetById(ctx context.Context, id int) (Posts, error) {
+	var t Posts
+	err := GetDB(ctx).Where("Id = ?", id).Take(&t).Error
+	return t, err
+}
